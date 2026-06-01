@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+
+  --color-brand-bg: #ffffff;
+  --color-brand-card: #f3f4f6;
+  --color-brand-ink: #000000;
+  --color-brand-accent: #000000;
+  --color-brand-muted: #6b7280;
+  --color-brand-gray: #f3f4f6;
+  --color-brand-black: #000000;
+  
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-pill: 9999px;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-ink font-sans antialiased selection:bg-black selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-medium tracking-tight;
+  }
+}
+
+.perspective-text {
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+/* Custom interactive plus cursor for hero & details */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  display: none;
+  color: black;
+}
+
+.custom-cursor::before,
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+}
+
+.custom-cursor::before {
+  width: 100%;
+  height: 1.5px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.custom-cursor::after {
+  height: 100%;
+  width: 1.5px;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+@media (pointer: fine) {
+  .hero-cursor-active .custom-cursor {
+    display: block;
+  }
+}
+
+.glass-pill {
+  @apply bg-white/80 backdrop-blur-md border border-brand-ink/5 rounded-pill;
+}
+
+/* Webkit Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-black);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.writing-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+/* Page transitions / custom utility frames */
+.magnetic-button {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
