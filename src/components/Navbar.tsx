@@ -1,11 +1,34 @@
 import { motion } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    // Reset navbar visibility on page transition
+    setIsVisible(true);
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide if scrolling down, show if scrolling up
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
 
   const navLinks = [
     { name: "Portfolio", path: "/portfolio" },
@@ -18,6 +41,7 @@ export default function Navbar() {
   const isDarkTheme = 
     location.pathname === "/portfolio" ||
     location.pathname === "/about" ||
+    location.pathname === "/contact" ||
     (location.pathname.startsWith("/portfolio/architecture/") && location.pathname.split("/").length > 3) ||
     (location.pathname.startsWith("/portfolio/interior/") && location.pathname.split("/").length > 3);
 
@@ -26,7 +50,9 @@ export default function Navbar() {
     : "bg-white/80 text-black border-black/5 shadow-sm";
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 px-4 md:px-10 py-6">
+    <div className={`fixed top-0 left-0 w-full z-50 px-4 md:px-10 py-6 transition-transform duration-500 ease-in-out ${
+      isVisible ? "translate-y-0" : "-translate-y-full"
+    }`}>
       <nav className={`max-w-7xl mx-auto flex justify-between items-center backdrop-blur-md px-8 h-20 border rounded-2xl transition-colors duration-500 ${themeClasses}`}>
         {/* Left: Logo aligned in a straight line */}
         <Link to="/" className="flex items-center group">

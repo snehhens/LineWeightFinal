@@ -1,121 +1,212 @@
 import { motion } from "motion/react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Contact() {
   return (
-    <section className="py-40 px-6 bg-[#f3f4f6] min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32 mb-36">
-           {/* Left side: Contact Info */}
-           <motion.div
-             initial={{ opacity: 0, x: -30 }}
-             whileInView={{ opacity: 1, x: 0 }}
-             viewport={{ once: true }}
-           >
-              <h2 className="text-6xl md:text-[8.5rem] font-display font-medium tracking-tighter uppercase mb-16 leading-none italic">
-                Contact <br /> Us
-              </h2>
-
-              <div className="flex flex-col md:flex-row gap-16 md:gap-24">
-                <div>
-                   <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] mb-6 border-b border-black inline-block pb-1">Contacts</h4>
-                   <p className="text-lg font-light leading-relaxed">
-                     +91 794-938-2961 <br />
-                     Office@lineweightsarchitecture.com
-                   </p>
-                </div>
-                <div>
-                   <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] mb-6 border-b border-black inline-block pb-1">Address</h4>
-                   <p className="text-lg font-light leading-relaxed max-w-xs">
-                     A-1045, Moneyplant highstreet, Nr. Ganesh glory 11, Jagatpur road, S.G. highway, Ahmedabad - 382470
-                   </p>
-                </div>
-              </div>
-           </motion.div>
-
-           {/* Right side: Abstract architectural graphic decorator */}
-           <motion.div
-             initial={{ opacity: 0, scale: 0.95 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             className="relative pt-6"
-           >
-              <div className="bg-white p-4 rounded-[3rem] shadow-2xl relative z-10">
-                <img 
-                  src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Architecture Design" 
-                  className="rounded-[2.5rem] w-full aspect-[4/5] object-cover grayscale"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="absolute top-0 right-0 w-32 h-32 text-black opacity-10">
-                 <svg viewBox="0 0 100 100" className="animate-[spin_12s_linear_infinity]">
-                    <g>
-                      {[...Array(12)].map((_, i) => (
-                        <rect key={i} x="48" y="0" width="4" height="40" transform={`rotate(${i * 30} 50 50)`} fill="currentColor" />
-                      ))}
-                    </g>
-                 </svg>
-              </div>
-           </motion.div>
+    <div className="min-h-screen bg-black">
+      {/* Top Section: Dark theme */}
+      <section className="bg-black pt-44 pb-32 px-6 md:px-12 lg:px-20 text-white relative overflow-hidden">
+        {/* Decorative architectural grid/spin element */}
+        <div className="absolute top-1/4 right-10 md:right-20 w-32 h-32 text-white/5 pointer-events-none">
+          <svg viewBox="0 0 100 100" className="animate-[spin_20s_linear_infinity]">
+            <g>
+              {[...Array(12)].map((_, i) => (
+                <rect key={i} x="48" y="0" width="4" height="40" transform={`rotate(${i * 30} 50 50)`} fill="currentColor" />
+              ))}
+            </g>
+          </svg>
         </div>
 
-        {/* Message Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32 items-start border-t border-black/5 pt-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+        <div className="max-w-7xl mx-auto">
+          {/* Badge */}
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-block px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-white/60 bg-white/5 border border-white/10 mb-8"
           >
-             <h3 className="text-5xl md:text-7xl font-display font-medium tracking-tighter uppercase mb-12 italic">
-               Send us a <br /> message
-             </h3>
-             <p className="text-xl md:text-2xl font-light text-black/60 max-w-md leading-relaxed">
-                If you're interested in hearing more about the way we work, have a project proposal, or want to collaborate, we'd love to hear from you.
-             </p>
+            Get In Touch
           </motion.div>
 
-          <motion.form 
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-24 gap-12">
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-6xl md:text-8xl lg:text-[8.5rem] font-display font-medium tracking-tighter uppercase leading-[0.85] text-white"
+            >
+              Contact <br /> Us.
+            </motion.h1>
+
+            {/* Interactive dot/circle indicator from screenshot */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="hidden lg:flex w-14 h-14 rounded-full border border-white/20 items-center justify-center relative group cursor-pointer"
+            >
+              <div className="w-1.5 h-1.5 bg-white rounded-full transition-colors duration-300" />
+              <div className="absolute inset-0 border border-white rounded-full scale-0 group-hover:scale-110 transition-transform duration-500 opacity-0 group-hover:opacity-100" />
+            </motion.div>
+          </div>
+
+          {/* Contact Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-16 mt-12">
+            {/* CALL US */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex flex-col gap-4 group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white bg-white/5 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <Phone size={14} />
+                </div>
+                <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] text-white/40">Call Us</span>
+              </div>
+              <a href="tel:+917949382961" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors">
+                +91 794-938-2961
+              </a>
+            </motion.div>
+
+            {/* EMAIL US */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex flex-col gap-4 group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white bg-white/5 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <Mail size={14} />
+                </div>
+                <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] text-white/40">Email Us</span>
+              </div>
+              <a href="mailto:Office@lineweightsarchitecture.com" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors break-all">
+                Office@lineweightsarchitecture.com
+              </a>
+            </motion.div>
+
+            {/* LOCATION */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-col gap-4 group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white bg-white/5 group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <MapPin size={14} />
+                </div>
+                <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] text-white/40">Location</span>
+              </div>
+              <p className="text-base md:text-lg font-light text-white/80 leading-relaxed max-w-sm">
+                A-1045, Moneyplant highstreet, Nr. Ganesh glory 11, Jagatpur road, S.G. highway, Ahmedabad - 382470
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom Section: White theme */}
+      <section className="bg-white py-32 px-6 md:px-12 lg:px-20 text-black">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+          {/* Left Side: Text content */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-5 space-y-8"
+          >
+            <h2 className="text-5xl md:text-7xl font-display font-medium tracking-tighter uppercase leading-[0.9]">
+              Send Us A <br />
+              <span className="italic">Message.</span>
+            </h2>
+            <p className="text-base md:text-lg font-light text-black/60 leading-relaxed max-w-md">
+              Have a vision you'd like to bring to life? Or perhaps a structural challenge that needs a minimalist solution? We're here to translate your dreams into concrete reality.
+            </p>
+          </motion.div>
+
+          {/* Right Side: Form content */}
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-10"
-            onSubmit={(e) => e.preventDefault()}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-7 w-full"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-               <div className="flex flex-col gap-2">
-                 <label className="text-[11px] font-bold uppercase tracking-widest opacity-40">Name*</label>
-                 <input type="text" placeholder="Your name" className="bg-transparent border-b border-black/15 py-4 focus:border-black outline-none transition-colors" />
-               </div>
-               <div className="flex flex-col gap-2">
-                 <label className="text-[11px] font-bold uppercase tracking-widest opacity-40">Last name</label>
-                 <input type="text" placeholder="Your last name" className="bg-transparent border-b border-black/15 py-4 focus:border-black outline-none transition-colors" />
-               </div>
-            </div>
-            <div className="flex flex-col gap-2">
-               <label className="text-[11px] font-bold uppercase tracking-widest opacity-40">Your email*</label>
-               <input type="email" placeholder="Your email address" className="bg-transparent border-b border-black/15 py-4 focus:border-black outline-none transition-colors" />
-            </div>
-            <div className="flex flex-col gap-2">
-               <label className="text-[11px] font-bold uppercase tracking-widest opacity-40">What are you looking for?*</label>
-               <select className="bg-transparent border-b border-black/15 py-4 focus:border-black outline-none transition-colors appearance-none cursor-pointer">
-                  <option value="architecture">Architectural Design</option>
-                  <option value="interior">Interior Design</option>
-                  <option value="landscape">Landscape Design</option>
-                  <option value="other">Other Inquiry</option>
-               </select>
-            </div>
-            <div className="flex flex-col gap-2">
-               <label className="text-[11px] font-bold uppercase tracking-widest opacity-40">Message*</label>
-               <textarea rows={4} placeholder="Enter your message" className="bg-transparent border-b border-black/15 py-4 focus:border-black outline-none transition-colors resize-none" />
-            </div>
-            <div className="flex justify-end pt-8">
-               <button className="bg-black text-white px-16 h-16 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-black/80 hover:scale-105 transition-all shadow-xl shadow-black/10">
-                 Submit
-               </button>
-            </div>
-          </motion.form>
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* First Name */}
+                <div className="flex flex-col gap-3">
+                  <div className="self-start px-3 py-1 bg-black/5 rounded-[6px] text-[10px] font-bold uppercase tracking-wider text-black/50">
+                    Name*
+                  </div>
+                  <input 
+                    type="text" 
+                    placeholder="First Name" 
+                    className="w-full bg-[#f9f9f9] border border-black/5 rounded-xl px-5 py-4 text-sm focus:border-black/20 focus:bg-white outline-none transition-all placeholder:text-black/30 font-sans"
+                    required
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div className="flex flex-col gap-3">
+                  <div className="self-start px-3 py-1 bg-black/5 rounded-[6px] text-[10px] font-bold uppercase tracking-wider text-black/50">
+                    Last Name
+                  </div>
+                  <input 
+                    type="text" 
+                    placeholder="Last Name" 
+                    className="w-full bg-[#f9f9f9] border border-black/5 rounded-xl px-5 py-4 text-sm focus:border-black/20 focus:bg-white outline-none transition-all placeholder:text-black/30 font-sans"
+                  />
+                </div>
+              </div>
+
+              {/* Your Email */}
+              <div className="flex flex-col gap-3">
+                <div className="self-start px-3 py-1 bg-black/5 rounded-[6px] text-[10px] font-bold uppercase tracking-wider text-black/50">
+                  Your Email*
+                </div>
+                <input 
+                  type="email" 
+                  placeholder="Email Address" 
+                  className="w-full bg-[#f9f9f9] border border-black/5 rounded-xl px-5 py-4 text-sm focus:border-black/20 focus:bg-white outline-none transition-all placeholder:text-black/30 font-sans"
+                  required
+                />
+              </div>
+
+              {/* Message */}
+              <div className="flex flex-col gap-3">
+                <div className="self-start px-3 py-1 bg-black/5 rounded-[6px] text-[10px] font-bold uppercase tracking-wider text-black/50">
+                  Message*
+                </div>
+                <textarea 
+                  rows={5}
+                  placeholder="How can we help?" 
+                  className="w-full bg-[#f9f9f9] border border-black/5 rounded-xl px-5 py-4 text-sm focus:border-black/20 focus:bg-white outline-none transition-all placeholder:text-black/30 resize-none font-sans"
+                  required
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end pt-4">
+                <button 
+                  type="submit"
+                  className="bg-black text-white hover:bg-black/80 hover:scale-[1.02] px-14 py-5 rounded-full text-xs font-bold uppercase tracking-[0.25em] transition-all duration-300 shadow-lg shadow-black/10 cursor-pointer"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
