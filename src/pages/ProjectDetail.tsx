@@ -9,15 +9,11 @@ export default function ProjectDetail() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const containerRef = useRef(null);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll();
 
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.05]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.4]);
@@ -57,7 +53,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const allImages = [project.mainImage, ...project.gallery];
+  const allImages = [project.mainImage, ...(project.gallery || [])];
 
   // Auto-scroll logic for the carousel
   useEffect(() => {
@@ -69,7 +65,7 @@ export default function ProjectDetail() {
   }, [allImages.length, isLightboxOpen]);
 
   return (
-    <div ref={containerRef} className="bg-white min-h-screen relative">
+    <div className="bg-white min-h-screen relative">
       {/* Hero Section (Carousel) */}
       <section className="relative h-[90vh] overflow-hidden bg-black">
         {/* Animated Carousel Images */}
@@ -242,7 +238,7 @@ export default function ProjectDetail() {
                 <div className="space-y-4 border-t border-black/5 pt-8">
                   <h3 className="text-[10px] uppercase tracking-widest font-bold text-black/30">Project Team</h3>
                   <div className="flex flex-wrap gap-3">
-                    {project.team.map((member, i) => (
+                    {(project.team || []).map((member, i) => (
                       <span key={i} className="px-4 py-2 bg-white border border-black/5 rounded-full text-xs font-semibold shadow-sm">
                         {member}
                       </span>
