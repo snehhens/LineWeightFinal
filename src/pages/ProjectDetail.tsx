@@ -119,10 +119,10 @@ export default function ProjectDetail() {
               e.stopPropagation();
               navigate(-1);
             }}
-            className="absolute top-8 md:top-12 left-6 md:left-12 flex items-center space-x-2 text-white/60 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold z-20 pointer-events-auto cursor-pointer"
+            className="absolute top-8 md:top-12 left-6 md:left-12 flex items-center space-x-2 px-4 py-2 rounded-full border border-white/20 bg-black/25 text-white hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="uppercase text-[10px] tracking-widest font-bold">Back</span>
           </motion.button>
 
           {/* Fullscreen indicator button */}

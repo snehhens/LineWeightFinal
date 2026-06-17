@@ -73,12 +73,12 @@ export default function CategoryProjects() {
               className="group"
             >
               <Link to={`/portfolio/${activeCategory}/${project.id}`} className="block">
-                {/* Rounded grayscale-to-color-on-hover image */}
+                {/* Rounded cover image */}
                 <div className="aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
                   <img 
                     src={project.mainImage} 
                     alt={project.title} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
@@ -86,9 +86,11 @@ export default function CategoryProjects() {
                 
                 {/* Title & Metadata details */}
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">
-                    {project.location} — {project.year}
-                  </span>
+                  {([project.location, project.year].filter(Boolean).length > 0) && (
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">
+                      {[project.location, project.year].filter(Boolean).join(' — ')}
+                    </span>
+                  )}
                   <h4 className="text-3xl font-display font-medium uppercase group-hover:pl-3 transition-all duration-300 italic">
                     {project.title}
                   </h4>
