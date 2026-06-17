@@ -62,6 +62,8 @@ export default function ProjectDetail() {
       </div>
     );
   }
+  
+  const hasSpecs = !!(project.location || project.year || project.area || (project.team && project.team.length > 0));
 
   return (
     <div className="bg-white min-h-screen relative">
@@ -192,7 +194,7 @@ export default function ProjectDetail() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="lg:col-span-7 space-y-12"
+              className={`space-y-12 ${hasSpecs ? "lg:col-span-7" : "lg:col-span-12"}`}
             >
               <div className="space-y-6">
                 <h2 className="text-xs uppercase tracking-[0.4em] font-bold text-black/30">Project Brief</h2>
@@ -206,50 +208,62 @@ export default function ProjectDetail() {
             </motion.div>
 
             {/* Right Column: Specification metrics */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="lg:col-span-5 bg-[#f3f4f6] p-8 md:p-12 rounded-3xl"
-            >
-              <div className="space-y-12">
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2 text-black/20">
-                      <MapPin className="w-3 h-3" />
-                      <span className="text-[10px] uppercase font-bold tracking-widest">Location</span>
+            {hasSpecs && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="lg:col-span-5 bg-[#f3f4f6] p-8 md:p-12 rounded-3xl"
+              >
+                <div className="space-y-12">
+                  {(project.location || project.year || project.area) && (
+                    <div className="grid grid-cols-2 gap-8">
+                      {project.location && (
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2 text-black/20">
+                            <MapPin className="w-3 h-3" />
+                            <span className="text-[10px] uppercase font-bold tracking-widest">Location</span>
+                          </div>
+                          <p className="font-bold">{project.location}</p>
+                        </div>
+                      )}
+                      {project.year && (
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2 text-black/20">
+                            <Clock className="w-3 h-3" />
+                            <span className="text-[10px] uppercase font-bold tracking-widest">Year</span>
+                          </div>
+                          <p className="font-bold">{project.year}</p>
+                        </div>
+                      )}
+                      {project.area && (
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2 text-black/20">
+                            <Maximize className="w-3 h-3" />
+                            <span className="text-[10px] uppercase font-bold tracking-widest">Area</span>
+                          </div>
+                          <p className="font-bold">{project.area}</p>
+                        </div>
+                      )}
                     </div>
-                    <p className="font-bold">{project.location}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2 text-black/20">
-                      <Clock className="w-3 h-3" />
-                      <span className="text-[10px] uppercase font-bold tracking-widest">Year</span>
-                    </div>
-                    <p className="font-bold">{project.year}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2 text-black/20">
-                      <Maximize className="w-3 h-3" />
-                      <span className="text-[10px] uppercase font-bold tracking-widest">Area</span>
-                    </div>
-                    <p className="font-bold">{project.area}</p>
-                  </div>
-                </div>
+                  )}
 
-                <div className="space-y-4 border-t border-black/5 pt-8">
-                  <h3 className="text-[10px] uppercase tracking-widest font-bold text-black/30">Project Team</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {(project.team || []).map((member, i) => (
-                      <span key={i} className="px-4 py-2 bg-white border border-black/5 rounded-full text-xs font-semibold shadow-sm">
-                        {member}
-                      </span>
-                    ))}
-                  </div>
+                  {project.team && project.team.length > 0 && (
+                    <div className="space-y-4 border-t border-black/5 pt-8">
+                      <h3 className="text-[10px] uppercase tracking-widest font-bold text-black/30">Project Team</h3>
+                      <div className="flex flex-wrap gap-3">
+                        {project.team.map((member, i) => (
+                          <span key={i} className="px-4 py-2 bg-white border border-black/5 rounded-full text-xs font-semibold shadow-sm">
+                            {member}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>

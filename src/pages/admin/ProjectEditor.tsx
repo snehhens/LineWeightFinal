@@ -43,12 +43,12 @@ export default function ProjectEditor() {
             setTitle(proj.title);
             setBrief(proj.brief);
             setDescription(proj.description);
-            setLocation(proj.location);
-            setYear(proj.year);
-            setArea(proj.area);
-            setTeamInput(proj.team.join(', '));
+            setLocation(proj.location || '');
+            setYear(proj.year || '');
+            setArea(proj.area || '');
+            setTeamInput(proj.team ? proj.team.join(', ') : '');
             setMainImage(proj.mainImage);
-            setGalleryInput(proj.gallery.join('\n'));
+            setGalleryInput(proj.gallery ? proj.gallery.join('\n') : '');
           } else {
             setError('Project not found');
           }
@@ -246,10 +246,9 @@ export default function ProjectEditor() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Location */}
             <div className="flex flex-col gap-3">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Location*</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Location</label>
               <input
                 type="text"
-                required
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Nakhatrana, Gujarat"
@@ -259,10 +258,9 @@ export default function ProjectEditor() {
 
             {/* Year */}
             <div className="flex flex-col gap-3">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Year*</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Year</label>
               <input
                 type="text"
-                required
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 placeholder="e.g. 2024"
@@ -272,10 +270,9 @@ export default function ProjectEditor() {
 
             {/* Area */}
             <div className="flex flex-col gap-3">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Area*</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/40">Area</label>
               <input
                 type="text"
-                required
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
                 placeholder="e.g. 7,500 sq ft"

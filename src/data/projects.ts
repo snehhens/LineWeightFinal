@@ -4,12 +4,12 @@ export interface Project {
   title: string;
   brief: string;
   description: string;
-  location: string;
-  year: string;
-  area: string;
-  team: string[];
+  location?: string;
+  year?: string;
+  area?: string;
+  team?: string[];
   mainImage: string;
-  gallery: string[];
+  gallery?: string[];
 }
 
 export const projectsData: Project[] = [

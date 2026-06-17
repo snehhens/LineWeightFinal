@@ -38,9 +38,9 @@ const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
   brief: { type: String, required: true },
   description: { type: String, required: true },
-  location: { type: String, required: true },
-  year: { type: String, required: true },
-  area: { type: String, required: true },
+  location: { type: String },
+  year: { type: String },
+  area: { type: String },
   team: [{ type: String }],
   mainImage: { type: String, required: true },
   gallery: [{ type: String }]
