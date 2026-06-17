@@ -37,6 +37,7 @@ export default function ProjectEditor() {
           const res = await fetch('/api/projects');
           if (!res.ok) throw new Error('Error loading project');
           const data: Project[] = await res.json();
+          if (!Array.isArray(data)) throw new Error('Invalid project data format');
           const proj = data.find(p => p.id === id);
           if (proj) {
             setCategory(proj.category);

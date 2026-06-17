@@ -15,15 +15,54 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_lineweights_token_key
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lineweights')
-  .then(() => {
-    console.log('Connected to MongoDB Atlas');
-    seedDatabase();
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-  });
+// MongoDB connection helper for Serverless Environments
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://lineweightsarchitecture_db_user:uBSSRMwd7OjaIiMu@cluster0.bqujtfx.mongodb.net/lineweights_db?appName=Cluster0';
+
+let cachedConnection: any = (global as any).mongoose;
+if (!cachedConnection) {
+  cachedConnection = (global as any).mongoose = { conn: null, promise: null };
+}
+
+async function connectToDatabase() {
+  if (cachedConnection.conn) {
+    return cachedConnection.conn;
+  }
+  if (!cachedConnection.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+    cachedConnection.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
+      return mongooseInstance;
+    });
+  }
+  try {
+    cachedConnection.conn = await cachedConnection.promise;
+    await seedDatabase();
+  } catch (e) {
+    cachedConnection.promise = null;
+    throw e;
+  }
+  return cachedConnection.conn;
+}
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+  // Skip DB connection for non-API requests
+  if (!req.path.startsWith('/api')) {
+    return next();
+  }
+  try {
+    await connectToDatabase();
+    next();
+  } catch (err: any) {
+    console.error('Database connection error in middleware:', err);
+    res.status(500).json({ 
+      message: 'Database connection failed', 
+      error: err.message,
+      suggestion: 'Please verify that your database cluster is online and reachable.'
+    });
+  }
+});
 
 // Schemas & Models
 const userSchema = new mongoose.Schema({
@@ -80,7 +119,7 @@ async function seedDatabase() {
   try {
     // 1. Seed Admin User
     const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'LWa@0109';
     const userCount = await User.countDocuments();
     if (userCount === 0) {
       const hashedPassword = await bcrypt.hash(adminPassword, 10);

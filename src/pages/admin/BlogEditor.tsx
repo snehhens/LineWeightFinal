@@ -41,7 +41,8 @@ export default function BlogEditor() {
           const res = await fetch('/api/blog');
           if (!res.ok) throw new Error('Error loading blog post');
           const data: BlogPost[] = await res.json();
-          const post = data.find(b => b.id === id);
+          if (!Array.isArray(data)) throw new Error('Invalid blog post data format');
+          const post = data.find(p => p.id === id);
           if (post) {
             setTitle(post.title);
             setExcerpt(post.excerpt);

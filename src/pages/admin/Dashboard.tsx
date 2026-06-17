@@ -32,10 +32,12 @@ export default function Dashboard() {
         const projData = await projRes.json();
         const blogData = await blogRes.json();
 
-        setProjects(projData);
-        setBlogs(blogData);
+        setProjects(Array.isArray(projData) ? projData : []);
+        setBlogs(Array.isArray(blogData) ? blogData : []);
       } catch (err) {
         console.error('Error fetching admin dashboard data:', err);
+        setProjects([]);
+        setBlogs([]);
       } finally {
         setLoading(false);
       }

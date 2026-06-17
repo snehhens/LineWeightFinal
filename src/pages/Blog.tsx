@@ -19,13 +19,22 @@ export default function Blog() {
 
   useEffect(() => {
     fetch('/api/blog')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
       .then((data: BlogPost[]) => {
-        setBlogPosts(data);
+        if (Array.isArray(data)) {
+          setBlogPosts(data);
+        } else {
+          console.error('Expected array of blog posts, got:', data);
+          setBlogPosts([]);
+        }
         setLoading(false);
       })
       .catch(err => {
         console.error('Error fetching blog posts:', err);
+        setBlogPosts([]);
         setLoading(false);
       });
   }, []);

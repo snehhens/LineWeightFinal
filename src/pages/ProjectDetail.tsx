@@ -20,13 +20,22 @@ export default function ProjectDetail() {
 
   useEffect(() => {
     fetch('/api/projects')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
       .then((data: Project[]) => {
-        setProjects(data);
+        if (Array.isArray(data)) {
+          setProjects(data);
+        } else {
+          console.error('Expected array of projects, got:', data);
+          setProjects([]);
+        }
         setLoading(false);
       })
       .catch(err => {
         console.error('Error fetching projects:', err);
+        setProjects([]);
         setLoading(false);
       });
   }, []);
