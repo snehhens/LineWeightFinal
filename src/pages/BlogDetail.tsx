@@ -1,12 +1,37 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft } from "lucide-react";
-import { blogPosts } from "./Blog";
+import { useState, useEffect } from "react";
+import { BlogPost } from "./Blog";
 
 export default function BlogDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/blog')
+      .then(res => res.json())
+      .then((data: BlogPost[]) => {
+        setBlogPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching blog post:', err);
+        setLoading(false);
+      });
+  }, []);
+
   const post = blogPosts.find(p => p.id === id);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!post) {
     return (

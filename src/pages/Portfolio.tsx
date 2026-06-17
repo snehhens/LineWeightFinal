@@ -31,18 +31,18 @@ export default function Portfolio() {
           className="relative flex-1 group cursor-pointer overflow-hidden border-black md:border-r last:border-r-0"
           onClick={() => navigate(section.path)}
         >
-          {/* Default grayscale filter, full color on hover */}
+          {/* Default grayscale filter on desktop, full color on mobile or on hover */}
           <div className="absolute inset-0 w-full h-full">
             <img
               src={section.image}
               alt={section.title}
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out"
+              className="w-full h-full object-cover grayscale-0 md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-105 transition-all duration-1000 ease-out"
               referrerPolicy="no-referrer"
             />
           </div>
           
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black/50 group-hover:bg-black/25 transition-colors duration-700" />
+          {/* Overlay - Lighter on mobile, darker default on desktop */}
+          <div className="absolute inset-0 bg-black/35 md:bg-black/50 md:group-hover:bg-black/25 transition-colors duration-700" />
           
           {/* Centered content */}
           <div className="relative h-full flex flex-col items-center justify-center text-white px-6 md:px-12 text-center">
@@ -66,13 +66,13 @@ export default function Portfolio() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="max-w-xs text-sm text-white/60 leading-relaxed group-hover:opacity-100 md:opacity-0 transition-opacity duration-700 hidden md:block"
+              className="max-w-xs text-sm text-white/60 leading-relaxed transition-opacity duration-700 block md:opacity-0 md:group-hover:opacity-100"
             >
               {section.description}
             </motion.p>
             
             <motion.div
-              className="mt-8 md:mt-12 w-14 h-14 rounded-full border border-white/20 flex items-center justify-center bg-transparent group-hover:bg-white group-hover:border-white group-hover:text-black transition-all duration-500"
+              className="mt-8 md:mt-12 w-14 h-14 rounded-full flex items-center justify-center bg-white text-black md:bg-transparent md:text-white md:border md:border-white/20 md:group-hover:bg-white md:group-hover:border-white md:group-hover:text-black transition-all duration-500"
             >
               <ArrowRight size={20} />
             </motion.div>

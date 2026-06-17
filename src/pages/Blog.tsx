@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export interface BlogPost {
   id: string;
@@ -12,49 +13,31 @@ export interface BlogPost {
   content: string[];
 }
 
-export const blogPosts: BlogPost[] = [
-  {
-    id: "urban-architecture",
-    title: "The Future of Urban Architecture",
-    excerpt: "How sustainable design is shaping the cities of tomorrow and what it means for residents.",
-    date: "May 10, 2026",
-    category: "Architecture",
-    readTime: "6 min read",
-    content: [
-      "As urban populations continue to swell, the architectural landscape must evolve to meet new ecological and social demands. The concrete jungles of the twentieth century, defined by their sterile glass facades and carbon-intensive steel frames, are giving way to a new paradigm of organic and responsive architecture.",
-      "At the core of this transition is the concept of radical biophilia. By integrating secondary forests, living walls, and active water filtration directly into high-rise commercial structures, architects are converting buildings from passive energy consumers into active environmental systems. These structures act as artificial lungs for the city, purifying the air while providing natural insulation that reduces cooling demands by up to 50%.",
-      "Furthermore, the integration of modular prefabrication is redefining construction speed and longevity. Rather than static structures designed for a singular purpose, the skyscrapers of tomorrow will feature modular units that can be slotted, reconfigured, or recycled as urban demographics shift. This carbon-neutral flexibility ensures that our cities are built not just for the next decade, but for the next century, blending structural honesty with geometric purity."
-    ]
-  },
-  {
-    id: "minimalism-interiors",
-    title: "Minimalism in Interior Spaces",
-    excerpt: "Exploring the emotional impact of minimalist interiors and how to achieve clarity in your home.",
-    date: "April 28, 2026",
-    category: "Interior",
-    readTime: "4 min read",
-    content: [
-      "In an era defined by continuous digital connectivity and sensory overload, our physical environments have become vital sanctuaries. Interior design is shifting away from decoration and towards curation, exploring how the stripping away of visual noise can foster mental clarity and emotional peace.",
-      "Minimalism is not merely the absence of objects; it is the presence of clarity. By focusing strictly on essential textures, honest materials, and natural shadow play, we can craft interiors that speak directly to the senses without overwhelming them. A hand-applied plaster wall, a single block of raw concrete, or a floating white oak shelf can carry more emotional weight than any ornamental trim.",
-      "Key to achieving this calm is indirect lighting. By concealing sources within perimeter coves or building them into custom joinery, we eliminate the glare and visual clutter of traditional light fixtures. The result is a space where the acoustic and visual atmospheres are balanced perfectly, providing a calm container that lets the mind breathe and reflect."
-    ]
-  },
-  {
-    id: "light-building-material",
-    title: "Light as a Building Material",
-    excerpt: "The power of natural light in creating atmospheric architecture and its psychological effects.",
-    date: "April 15, 2026",
-    category: "Design",
-    readTime: "5 min read",
-    content: [
-      "Of all the resources available to an architect, none is as potent or as cost-effective as natural light. Yet, light is often treated as a passive byproduct of window placements rather than an active structural component. When manipulated intentionally, light and shadow can redefine proportions, highlight materiality, and dictate the emotional rhythm of a building.",
-      "Historically, masterpieces of sacred architecture used light to evoke awe. Modern residential and commercial designs are adopting these principles to enhance well-being. By utilizing light-refracting geometries, internal lightwells, and reactive glass skins, we can channel the sun deep into structural cores, shifting the interior atmosphere dynamically as the day progresses.",
-      "This dynamic shift aligns our indoor environments with natural circadian rhythms, improving productivity and mood. A room that catches the cold, blue light of dawn feels fundamentally different from one bathed in the long, amber shadows of the golden hour. Designing with light means embracing the passing of time, turning static walls into living canvas boards."
-    ]
-  }
-];
-
 export default function Blog() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/blog')
+      .then(res => res.json())
+      .then((data: BlogPost[]) => {
+        setBlogPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching blog posts:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <section id="blog" className="py-40 px-6 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto">

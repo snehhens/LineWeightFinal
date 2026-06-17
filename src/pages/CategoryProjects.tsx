@@ -1,15 +1,39 @@
 import { motion } from "motion/react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { projectsData } from "../data/projects";
+import { useState, useEffect } from "react";
+import { Project } from "../data/projects";
 
 export default function CategoryProjects() {
   const { category } = useParams<{ category: 'architecture' | 'interior' }>();
   const navigate = useNavigate();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Filter projects by active category
   const activeCategory = category === 'interior' ? 'interior' : 'architecture';
-  const projects = projectsData.filter(p => p.category === activeCategory);
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then((data: Project[]) => {
+        const filtered = data.filter(p => p.category === activeCategory);
+        setProjects(filtered);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching projects:', err);
+        setLoading(false);
+      });
+  }, [activeCategory]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <section className="bg-white min-h-screen pt-36 pb-24 overflow-hidden">
