@@ -24,10 +24,11 @@ function AppLayout() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isAdminPage = location.pathname.startsWith('/admin');
+  const isProjectDetailPage = /^\/portfolio\/[^/]+\/[^/]+\/?$/.test(location.pathname);
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between">
-      {!isAdminPage && <Navbar />}
+      {!isAdminPage && !isProjectDetailPage && <Navbar />}
       
       <main className="flex-grow">
         <Routes>
