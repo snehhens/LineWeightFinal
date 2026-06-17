@@ -404,7 +404,7 @@ app.delete('/api/blog/:id', authenticateJWT, async (req, res) => {
 });
 
 // Serve Frontend in Production
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   app.use(express.static(path.resolve('dist')));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve('dist', 'index.html'));
