@@ -73,24 +73,28 @@ export default function ProjectDetail() {
           className="absolute inset-0 cursor-zoom-in z-0"
           onClick={() => setIsLightboxOpen(true)}
         >
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={currentImageIndex}
-              style={{ scale: heroScale, opacity: heroOpacity }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <img 
-                src={allImages[currentImageIndex]} 
-                alt={`${project.title} - view ${currentImageIndex + 1}`} 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
-          </AnimatePresence>
+          <motion.div 
+            style={{ scale: heroScale, opacity: heroOpacity }}
+            className="w-full h-full relative"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentImageIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute inset-0"
+              >
+                <img 
+                  src={allImages[currentImageIndex]} 
+                  alt={`${project.title} - view ${currentImageIndex + 1}`} 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
           {/* Subtle gradient to anchor text and buttons */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
         </div>
