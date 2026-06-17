@@ -31,6 +31,35 @@
     <!-- preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Global Error Debug Handler -->
+    <script>
+      window.addEventListener('error', function(e) {
+        if (e.filename && (e.filename.indexOf('blob:') !== -1 || e.filename.indexOf('chrome-extension:') !== -1 || e.message.indexOf('addListener') !== -1)) {
+          return;
+        }
+        var div = document.createElement('div');
+        div.style.position = 'fixed';
+        div.style.top = '0';
+        div.style.left = '0';
+        div.style.width = '100%';
+        div.style.height = '100%';
+        div.style.backgroundColor = '#7f1d1d';
+        div.style.color = '#fef2f2';
+        div.style.padding = '40px';
+        div.style.zIndex = '999999';
+        div.style.fontFamily = 'monospace';
+        div.style.fontSize = '14px';
+        div.style.lineHeight = '1.6';
+        div.style.overflow = 'auto';
+        div.innerHTML = '<h1 style="font-size: 24px; margin-bottom: 20px; text-transform: uppercase;">Runtime Error Caught</h1>' +
+                        '<strong>Message:</strong> ' + e.message + '<br><br>' +
+                        '<strong>Source:</strong> ' + e.filename + ':' + e.lineno + ':' + e.colno + '<br><br>' +
+                        '<strong>Call Stack:</strong><br>' +
+                        '<pre style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; overflow: auto; margin-top: 10px;">' + (e.error ? e.error.stack : 'No stack trace available') + '</pre>';
+        document.body.appendChild(div);
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

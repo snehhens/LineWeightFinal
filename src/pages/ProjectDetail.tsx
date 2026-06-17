@@ -32,10 +32,20 @@ export default function ProjectDetail() {
   }, []);
 
   const project = projects.find(p => p.id === id);
+  const allImages = project ? [project.mainImage, ...(project.gallery || [])] : [];
 
   useEffect(() => {
     setCurrentImageIndex(0);
   }, [id]);
+
+  // Auto-scroll logic for the carousel (placed before early returns to comply with React Hooks Rules)
+  useEffect(() => {
+    if (loading || !project || isLightboxOpen || allImages.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [allImages.length, isLightboxOpen, loading, project]);
 
   if (loading) {
     return (
@@ -52,17 +62,6 @@ export default function ProjectDetail() {
       </div>
     );
   }
-
-  const allImages = [project.mainImage, ...(project.gallery || [])];
-
-  // Auto-scroll logic for the carousel
-  useEffect(() => {
-    if (isLightboxOpen) return; // pause auto scroll when lightbox is open
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
-    }, 5500);
-    return () => clearInterval(interval);
-  }, [allImages.length, isLightboxOpen]);
 
   return (
     <div className="bg-white min-h-screen relative">
