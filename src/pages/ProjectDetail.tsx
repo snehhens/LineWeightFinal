@@ -46,7 +46,7 @@ function CarouselImage({ src, srcSet, sizes, alt }: { src: string, srcSet?: stri
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>(projectsData);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [dbLoading, setDbLoading] = useState(true);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -102,7 +102,7 @@ export default function ProjectDetail() {
     return () => clearInterval(interval);
   }, [allImages.length, isLightboxOpen, project]);
 
-  if (!project && dbLoading) {
+  if (dbLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />

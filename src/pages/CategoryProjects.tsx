@@ -48,14 +48,11 @@ export default function CategoryProjects() {
   const navigate = useNavigate();
   const activeCategory = category === 'interior' ? 'interior' : 'architecture';
 
-  const [projects, setProjects] = useState<Project[]>(() => {
-    return projectsData.filter(p => p.category === activeCategory);
-  });
+  const [projects, setProjects] = useState<Project[]>([]);
   const [dbLoading, setDbLoading] = useState(true);
-
   useEffect(() => {
-    // Immediately show static local data to avoid visual jumps when switching category
-    setProjects(projectsData.filter(p => p.category === activeCategory));
+    setProjects([]);
+    setDbLoading(true);
 
     fetch('/api/projects')
       .then(res => {
@@ -77,7 +74,7 @@ export default function CategoryProjects() {
       });
   }, [activeCategory]);
 
-  if (projects.length === 0 && dbLoading) {
+  if (dbLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
