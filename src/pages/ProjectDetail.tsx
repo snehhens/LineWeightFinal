@@ -16,6 +16,33 @@ function getOptimizedImageUrl(url: string, width: number) {
   }
 }
 
+function CarouselImage({ src, srcSet, sizes, alt }: { src: string, srcSet?: string, sizes?: string, alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="w-full h-full relative bg-black">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-black/45 flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        </div>
+      )}
+      <img
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setHasError(true)}
+        className={`w-full h-full object-cover transition-opacity duration-700 ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+}
+
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -115,7 +142,7 @@ export default function ProjectDetail() {
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 className="absolute inset-0"
               >
-                <img 
+                <CarouselImage
                   src={getOptimizedImageUrl(allImages[currentImageIndex], 1600)} 
                   srcSet={`
                     ${getOptimizedImageUrl(allImages[currentImageIndex], 640)} 640w,
@@ -124,8 +151,6 @@ export default function ProjectDetail() {
                   `}
                   sizes="100vw"
                   alt={`${project.title} - view ${currentImageIndex + 1}`} 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
               </motion.div>
             </AnimatePresence>

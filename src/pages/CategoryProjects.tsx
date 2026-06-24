@@ -16,6 +16,33 @@ function getOptimizedImageUrl(url: string, width: number) {
   }
 }
 
+function ProjectImage({ src, srcSet, sizes, alt }: { src: string, srcSet?: string, sizes?: string, alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="w-full h-full relative bg-[#f3f4f6]">
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="w-5 h-5 border-2 border-black/10 border-t-black/40 rounded-full animate-spin" />
+        </div>
+      )}
+      <img
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setHasError(true)}
+        className={`w-full h-full object-cover transition-all duration-700 ${
+          isLoaded ? "opacity-100 group-hover:scale-105" : "opacity-0"
+        }`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+}
+
 export default function CategoryProjects() {
   const { category } = useParams<{ category: 'interior' | 'architecture' }>();
   const navigate = useNavigate();
@@ -89,19 +116,17 @@ export default function CategoryProjects() {
               <Link to={`/portfolio/${activeCategory}/${project.id}`} className="block">
                 {/* Rounded cover image */}
                 <div className="aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
-                  <img 
-                    src={getOptimizedImageUrl(project.mainImage, 800)} 
+                  <ProjectImage 
+                    src={getOptimizedImageUrl(project.mainImage, 800)}
                     srcSet={`
                       ${getOptimizedImageUrl(project.mainImage, 400)} 400w,
                       ${getOptimizedImageUrl(project.mainImage, 800)} 800w,
                       ${getOptimizedImageUrl(project.mainImage, 1200)} 1200w
                     `}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    alt={project.title} 
-                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
+                    alt={project.title}
                   />
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors z-10 pointer-events-none" />
                 </div>
                 
                 {/* Title & Metadata details */}
