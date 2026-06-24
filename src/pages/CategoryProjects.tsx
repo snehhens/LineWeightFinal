@@ -48,11 +48,43 @@ export default function CategoryProjects() {
   const navigate = useNavigate();
   const activeCategory = category === 'interior' ? 'interior' : 'architecture';
 
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [dbLoading, setDbLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(() => {
+    try {
+      const cached = localStorage.getItem('lwa_projects');
+      if (cached) {
+        const parsed = JSON.parse(cached) as Project[];
+        return parsed.filter(p => p.category === activeCategory);
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [dbLoading, setDbLoading] = useState(() => {
+    try {
+      const cached = localStorage.getItem('lwa_projects');
+      return cached ? JSON.parse(cached).length === 0 : true;
+    } catch (e) {
+      return true;
+    }
+  });
+
   useEffect(() => {
-    setProjects([]);
-    setDbLoading(true);
+    // Attempt to load from cache immediately when category changes to avoid blank page
+    try {
+      const cached = localStorage.getItem('lwa_projects');
+      if (cached) {
+        const parsed = JSON.parse(cached) as Project[];
+        setProjects(parsed.filter(p => p.category === activeCategory));
+        setDbLoading(false);
+      } else {
+        setProjects([]);
+        setDbLoading(true);
+      }
+    } catch (e) {
+      setProjects([]);
+      setDbLoading(true);
+    }
 
     fetch('/api/projects')
       .then(res => {
@@ -61,6 +93,7 @@ export default function CategoryProjects() {
       })
       .then((data: Project[]) => {
         if (Array.isArray(data)) {
+          localStorage.setItem('lwa_projects', JSON.stringify(data));
           const filtered = data.filter(p => p.category === activeCategory);
           setProjects(filtered);
         } else {

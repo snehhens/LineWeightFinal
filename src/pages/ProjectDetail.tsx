@@ -46,8 +46,26 @@ function CarouselImage({ src, srcSet, sizes, alt }: { src: string, srcSet?: stri
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [dbLoading, setDbLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(() => {
+    try {
+      const cached = localStorage.getItem('lwa_projects');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [dbLoading, setDbLoading] = useState(() => {
+    try {
+      const cached = localStorage.getItem('lwa_projects');
+      if (cached) {
+        const parsed = JSON.parse(cached) as Project[];
+        return !parsed.some(p => p.id === id);
+      }
+      return true;
+    } catch (e) {
+      return true;
+    }
+  });
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -65,6 +83,7 @@ export default function ProjectDetail() {
       })
       .then((data: Project[]) => {
         if (Array.isArray(data)) {
+          localStorage.setItem('lwa_projects', JSON.stringify(data));
           setProjects(data);
         } else {
           console.error('Expected array of projects, got:', data);
