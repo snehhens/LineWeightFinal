@@ -2,13 +2,25 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Clock, MapPin, Maximize, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
-import { Project } from '../data/projects';
+import { Project, projectsData } from '../data/projects';
+
+function getOptimizedImageUrl(url: string, width: number) {
+  if (!url || !url.includes('images.unsplash.com')) return url;
+  try {
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('w', width.toString());
+    urlObj.searchParams.set('q', '75');
+    return urlObj.toString();
+  } catch (e) {
+    return url;
+  }
+}
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(projectsData);
+  const [dbLoading, setDbLoading] = useState(true);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -29,14 +41,12 @@ export default function ProjectDetail() {
           setProjects(data);
         } else {
           console.error('Expected array of projects, got:', data);
-          setProjects([]);
         }
-        setLoading(false);
+        setDbLoading(false);
       })
       .catch(err => {
         console.error('Error fetching projects:', err);
-        setProjects([]);
-        setLoading(false);
+        setDbLoading(false);
       });
   }, []);
 
@@ -47,16 +57,25 @@ export default function ProjectDetail() {
     setCurrentImageIndex(0);
   }, [id]);
 
-  // Auto-scroll logic for the carousel (placed before early returns to comply with React Hooks Rules)
+  // Preload all gallery and main images when allImages updates
   useEffect(() => {
-    if (loading || !project || isLightboxOpen || allImages.length === 0) return;
+    if (allImages.length <= 1) return;
+    allImages.forEach((url) => {
+      const img = new Image();
+      img.src = getOptimizedImageUrl(url, 1200);
+    });
+  }, [allImages]);
+
+  // Auto-scroll logic for the carousel
+  useEffect(() => {
+    if (!project || isLightboxOpen || allImages.length === 0) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
     }, 5500);
     return () => clearInterval(interval);
-  }, [allImages.length, isLightboxOpen, loading, project]);
+  }, [allImages.length, isLightboxOpen, project]);
 
-  if (loading) {
+  if (!project && dbLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -77,7 +96,7 @@ export default function ProjectDetail() {
   return (
     <div className="bg-white min-h-screen relative">
       {/* Hero Section (Carousel) */}
-      <section className="relative h-[90vh] overflow-hidden bg-black">
+      <section className="relative h-[50vh] md:h-[90vh] overflow-hidden bg-black">
         {/* Animated Carousel Images */}
         <div 
           className="absolute inset-0 cursor-zoom-in z-0"
@@ -97,7 +116,13 @@ export default function ProjectDetail() {
                 className="absolute inset-0"
               >
                 <img 
-                  src={allImages[currentImageIndex]} 
+                  src={getOptimizedImageUrl(allImages[currentImageIndex], 1600)} 
+                  srcSet={`
+                    ${getOptimizedImageUrl(allImages[currentImageIndex], 640)} 640w,
+                    ${getOptimizedImageUrl(allImages[currentImageIndex], 1024)} 1024w,
+                    ${getOptimizedImageUrl(allImages[currentImageIndex], 1600)} 1600w
+                  `}
+                  sizes="100vw"
                   alt={`${project.title} - view ${currentImageIndex + 1}`} 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -110,7 +135,7 @@ export default function ProjectDetail() {
         </div>
 
         {/* Floating Content Overlaid on Carousel */}
-        <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-24 text-white z-10 pointer-events-none">
+        <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-24 pb-12 md:pb-24 text-white z-10 pointer-events-none">
           {/* Back Button */}
           <motion.button 
             initial={{ opacity: 0, x: -20 }}
@@ -119,7 +144,7 @@ export default function ProjectDetail() {
               e.stopPropagation();
               navigate(-1);
             }}
-            className="absolute top-8 md:top-12 left-6 md:left-12 flex items-center space-x-2 px-4 py-2 rounded-full border border-white/20 bg-black/25 text-white hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
+            className="absolute top-4 md:top-12 left-4 md:left-12 flex items-center space-x-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 bg-black/25 text-white hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="uppercase text-[10px] tracking-widest font-bold">Back</span>
@@ -133,7 +158,7 @@ export default function ProjectDetail() {
               e.stopPropagation();
               setIsLightboxOpen(true);
             }}
-            className="absolute top-8 md:top-12 right-6 md:right-12 w-10 h-10 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
+            className="absolute top-4 md:top-12 right-4 md:right-12 w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
             title="View Fullscreen"
           >
             <ZoomIn className="w-4.5 h-4.5" />
@@ -145,9 +170,9 @@ export default function ProjectDetail() {
               e.stopPropagation();
               setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
             }}
-            className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
+            className="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
           </button>
 
           {/* Right Arrow Controls */}
@@ -156,9 +181,9 @@ export default function ProjectDetail() {
               e.stopPropagation();
               setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
             }}
-            className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
+            className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/20 bg-black/25 text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all z-20 pointer-events-auto cursor-pointer"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
           </button>
 
           {/* Title and Category */}
@@ -166,18 +191,18 @@ export default function ProjectDetail() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="mb-8"
+            className="mb-4 md:mb-8"
           >
-            <span className="text-[10px] uppercase tracking-[0.6em] font-bold text-white/50 mb-6 inline-block">
+            <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] font-bold text-white/50 mb-2 md:mb-6 inline-block">
               {project.category}
             </span>
-            <h1 className="text-5xl md:text-[8vw] font-display font-medium tracking-tighter leading-none uppercase italic">
+            <h1 className="text-2xl sm:text-4xl md:text-[8vw] font-display font-medium tracking-tighter leading-none uppercase italic">
               {project.title}
             </h1>
           </motion.div>
 
           {/* Indicators / Navigation Dots */}
-          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center space-x-3 z-20 pointer-events-auto">
+          <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center space-x-2 md:space-x-3 z-20 pointer-events-auto">
             {allImages.map((_, i) => (
               <button
                 key={i}
@@ -185,8 +210,8 @@ export default function ProjectDetail() {
                   e.stopPropagation();
                   setCurrentImageIndex(i);
                 }}
-                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                  currentImageIndex === i ? "bg-white scale-125 w-4" : "bg-white/40 hover:bg-white/60"
+                className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all cursor-pointer ${
+                  currentImageIndex === i ? "bg-white scale-125 w-3 md:w-4" : "bg-white/40 hover:bg-white/60"
                 }`}
               />
             ))}
@@ -304,8 +329,9 @@ export default function ProjectDetail() {
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-black/30">Continue Exploring</span>
             <button 
               onClick={() => {
-                const currentIndex = projects.findIndex(p => p.id === id);
-                const nextProject = projects[(currentIndex + 1) % projects.length];
+                const categoryProjects = projects.filter(p => p.category === project.category);
+                const currentIndex = categoryProjects.findIndex(p => p.id === id);
+                const nextProject = categoryProjects[(currentIndex + 1) % categoryProjects.length];
                 navigate(`/portfolio/${nextProject.category}/${nextProject.id}`);
               }}
               className="group text-4xl md:text-6xl font-display font-medium tracking-tighter uppercase hover:opacity-60 transition-opacity italic"
@@ -363,7 +389,7 @@ export default function ProjectDetail() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              src={allImages[currentImageIndex]}
+              src={getOptimizedImageUrl(allImages[currentImageIndex], 1600)}
               alt={`${project.title} fullscreen view ${currentImageIndex + 1}`}
               className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
               onClick={(e) => e.stopPropagation()}

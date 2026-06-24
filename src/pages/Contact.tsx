@@ -66,8 +66,8 @@ export default function Contact() {
                 </div>
                 <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] text-white/40">Call Us</span>
               </div>
-              <a href="tel:+917949382961" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors">
-                +91 794-938-2961
+              <a href="tel:+919624241045" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors">
+                +91 962-424-1045
               </a>
             </motion.div>
 
@@ -85,8 +85,8 @@ export default function Contact() {
                 </div>
                 <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] text-white/40">Email Us</span>
               </div>
-              <a href="mailto:Office@lineweightsarchitecture.com" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors break-all">
-                Office@lineweightsarchitecture.com
+              <a href="mailto:office@lwa.co.in" className="text-xl md:text-2xl font-light hover:text-white/80 transition-colors break-all">
+                office@lwa.co.in
               </a>
             </motion.div>
 

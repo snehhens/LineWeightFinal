@@ -2,18 +2,34 @@ import { motion } from "motion/react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Project } from "../data/projects";
+import { Project, projectsData } from "../data/projects";
+
+function getOptimizedImageUrl(url: string, width: number) {
+  if (!url || !url.includes('images.unsplash.com')) return url;
+  try {
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('w', width.toString());
+    urlObj.searchParams.set('q', '75');
+    return urlObj.toString();
+  } catch (e) {
+    return url;
+  }
+}
 
 export default function CategoryProjects() {
-  const { category } = useParams<{ category: 'architecture' | 'interior' }>();
+  const { category } = useParams<{ category: 'interior' | 'architecture' }>();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Filter projects by active category
   const activeCategory = category === 'interior' ? 'interior' : 'architecture';
 
+  const [projects, setProjects] = useState<Project[]>(() => {
+    return projectsData.filter(p => p.category === activeCategory);
+  });
+  const [dbLoading, setDbLoading] = useState(true);
+
   useEffect(() => {
+    // Immediately show static local data to avoid visual jumps when switching category
+    setProjects(projectsData.filter(p => p.category === activeCategory));
+
     fetch('/api/projects')
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
@@ -25,18 +41,16 @@ export default function CategoryProjects() {
           setProjects(filtered);
         } else {
           console.error('Expected array of projects, got:', data);
-          setProjects([]);
         }
-        setLoading(false);
+        setDbLoading(false);
       })
       .catch(err => {
         console.error('Error fetching projects:', err);
-        setProjects([]);
-        setLoading(false);
+        setDbLoading(false);
       });
   }, [activeCategory]);
 
-  if (loading) {
+  if (projects.length === 0 && dbLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -76,7 +90,13 @@ export default function CategoryProjects() {
                 {/* Rounded cover image */}
                 <div className="aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
                   <img 
-                    src={project.mainImage} 
+                    src={getOptimizedImageUrl(project.mainImage, 800)} 
+                    srcSet={`
+                      ${getOptimizedImageUrl(project.mainImage, 400)} 400w,
+                      ${getOptimizedImageUrl(project.mainImage, 800)} 800w,
+                      ${getOptimizedImageUrl(project.mainImage, 1200)} 1200w
+                    `}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     alt={project.title} 
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"

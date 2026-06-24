@@ -99,11 +99,9 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Absolute Bottom Info Block to anchor page and enrich mobile view */}
       <div className="absolute bottom-8 left-0 right-0 flex justify-between items-center px-8 md:px-16 text-[9px] uppercase tracking-[0.3em] opacity-40 font-bold z-10 w-full">
         <div>Ahmedabad, India</div>
-        <div className="hidden sm:block">© 2026 Lineweights</div>
-        <div>Collective Studio</div>
+        <div>© 2026 Lineweights</div>
       </div>
     </div>
   );

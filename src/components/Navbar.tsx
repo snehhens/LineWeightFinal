@@ -61,7 +61,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3"
           >
-             <span className="text-2xl font-display font-bold tracking-tighter group-hover:scale-105 transition-transform">LW</span>
+             <span className="text-2xl font-display font-bold tracking-tighter group-hover:scale-105 transition-transform">LWA</span>
              <div className={`w-px h-5 mx-1 transition-colors ${isDarkTheme ? 'bg-white/20' : 'bg-black/10'}`} />
              <span className="text-[11px] font-sans font-bold uppercase tracking-[0.25em] whitespace-nowrap">
                Lineweights Architecture

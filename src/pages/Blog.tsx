@@ -129,7 +129,7 @@ export default function Blog() {
           </div>
           
           <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 opacity-[0.03] pointer-events-none">
-            <h2 className="text-[25vw] font-display font-bold leading-none">LW</h2>
+            <h2 className="text-[25vw] font-display font-bold leading-none">LWA</h2>
           </div>
         </motion.section>
       </div>

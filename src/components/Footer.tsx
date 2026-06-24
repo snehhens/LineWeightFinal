@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -34,11 +34,12 @@ export default function Footer() {
                 Jagatpur road, S.G. highway
              </p>
              <div className="flex gap-4">
-                {[Instagram, Linkedin, Twitter, Youtube].map((Icon, i) => (
-                  <a key={i} href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                    <Icon size={16} />
-                  </a>
-                ))}
+                <a href="https://www.instagram.com/_lw_architecture/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all" title="Instagram">
+                  <Instagram size={16} />
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61587126871103" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all" title="Facebook">
+                  <Facebook size={16} />
+                </a>
              </div>
           </div>
         </div>
